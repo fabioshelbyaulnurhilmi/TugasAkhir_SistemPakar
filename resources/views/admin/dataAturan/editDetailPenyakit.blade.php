@@ -69,8 +69,8 @@
                                 name="idGejala">
                                 <option value=""> -- Pilih Gejala -- </option>
                                 @foreach ($Datagejala as $k)
-                                    <option value="{{ $k->id }}"
-                                        {{ old('idGejala') == $k->id || $editDetailPenyakit->idGejala == $k->id ? 'selected' : '' }}>
+                                    <option value="{{ $k->idGejala }}"
+                                        {{ old('idGejala') == $k->idGejala || $editDetailPenyakit->idGejala == $k->idGejala ? 'selected' : '' }}>
                                         {{ $k->namaGejala }} </option>
                                 @endforeach
                             </select>
@@ -84,8 +84,8 @@
                                 name="idPenyakit">
                                 <option value=""> -- Pilih Penyakit -- </option>
                                 @foreach ($Datapenyakit as $k)
-                                    <option value="{{ $k->id }}"
-                                        {{ old('idPenyakit') == $k->id || $editDetailPenyakit->idPenyakit == $k->id ? 'selected' : '' }}>
+                                    <option value="{{ $k->idPenyakit }}"
+                                        {{ old('idPenyakit') == $k->idPenyakit || $editDetailPenyakit->idPenyakit == $k->idPenyakit ? 'selected' : '' }}>
                                         {{ $k->namaPenyakit }}
                                     </option>
                                 @endforeach

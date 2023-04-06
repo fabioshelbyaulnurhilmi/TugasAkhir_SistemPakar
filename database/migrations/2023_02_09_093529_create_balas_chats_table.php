@@ -19,6 +19,7 @@ return new class extends Migration
             ->onUpdate('cascade');
             $table->longText('balasan');
             $table->dateTime('sender');
+            // $table->foreign('idChat')->references('idChat')->on('chats');
             $table->timestamps();
         });
     }

@@ -43,9 +43,14 @@
                         </div>
                         <div class="col-lg-8 col-xl-12 overflow-hidden">
                             <div class="mb-4">
-                                <label class="form-label" for="example-file-input-multiple">Gambar Gejala</label>
-                                <input class="form-control" name="gambarGejala" type="file"
-                                    id="example-file-input-multiple" multiple>
+                                <label class="form-label" for="example-file-input-multiple">Pilih Foto</label>
+                                <input class="form-control" type="file" name="gambarGejala" multiple>
+                                @error('gambarGejala')
+                                    <span class="text-danger" style="font-size: 0.875rem;">
+
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                     </div>

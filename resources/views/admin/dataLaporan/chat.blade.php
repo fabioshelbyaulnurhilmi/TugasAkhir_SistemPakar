@@ -1,5 +1,8 @@
 @extends('layouts.main')
 @section('page')
+{{-- @dd($chat) --}}
+{{-- @json($chat) --}}
+
     <div class="block block-rounded">
         <div class="block-header block-header-default" style="padding-bottom: 25px">
             {{-- <button type="button" class="btn btn-alt-success me-1 mb-1">
@@ -19,15 +22,20 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $no = 1;
+                    @endphp
+                    @foreach ( $chat->unique('sender_id') as $key )
+
                     <tr>
-                        <td class="text-center fs-sm">2</td>
-                        <td class="fw-normal fs-sm"> Beby Mozena</td>
-                        <td class="fw-normal fs-sm" style="text-align: justify"> Terimakasih min, tanaman saya sudah sembuh
+                        <td class="text-center fs-sm">{{ $no++ }}</td>
+                        <td class="fw-normal fs-sm"> {{ $key->sender->namaPengguna }}</td>
+                        <td class="fw-normal fs-sm" style="text-align: justify"> {{ $key->isi }}
                         </td>
-                        <td class="fw-normal fs-sm" style="text-align: justify">19-08-2022</td>
+                        <td class="fw-normal fs-sm" style="text-align: justify">{{ $key->created_at }}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="/chat/balaschat/1" type="button"
+                                <a href="{{ route('balas-chat', $key->sender_id) }}" type="button"
                                     class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip"
                                     aria-label="reply" data-bs-original-title="reply">
                                     <i class="fa fa-fw fa-reply-all"></i>
@@ -35,6 +43,9 @@
                             </div>
                         </td>
                     </tr>
+
+                    @endforeach
+
                 </tbody>
             </table>
         </div>

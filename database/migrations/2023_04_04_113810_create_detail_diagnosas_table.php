@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('komentars', function (Blueprint $table) {
+        Schema::create('detail_diagnosas', function (Blueprint $table) {
             $table->id();
-            $table->string('idUser');
-            $table->string('username', 50);
-            $table->string('nilai', 25);
-            $table->string('saran');
-            $table->foreign('idUser')->references('idUser')->on('users');
+            $table->string('key')->nullable();
+            $table->unsignedBigInteger('idDiagnosa');
+            $table->foreign('idDiagnosa')->references('id')->on('diagnosas');
+            $table->unsignedBigInteger('idDetailPenyakit');
+            $table->foreign('idDetailPenyakit')->references('id')->on('detail_penyakits');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('komentars');
+        Schema::dropIfExists('detail_diagnosas');
     }
 };

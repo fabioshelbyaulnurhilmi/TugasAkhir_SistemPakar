@@ -49,11 +49,15 @@
                             </div>
                         </div>
                         <div class="row push">
-                            <div class="col-lg-8 col-xl-12 overflow-hidden">
-                                <div class="mb-4">
-                                    <label class="form-label" for="example-file-input-multiple">Pilih Foto</label>
-                                    <input class="form-control" type="file" name="gambar" multiple>
-                                </div>
+                            <div class="mb-4">
+                                <label class="form-label" for="example-file-input-multiple">Pilih Foto</label>
+                                <input class="form-control" type="file" name="gambar" multiple>
+                                @error('gambar')
+                                    <span class="text-danger" style="font-size: 0.875rem;">
+
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                             <div class="mb-4">
                                 <label class="form-label" for="example-select"> Jenis Kelamin </label>
@@ -78,7 +82,8 @@
                                             <i class="far fa-address-card"></i>
                                         </span>
                                         @error('alamat')
-                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
+                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                 </div>

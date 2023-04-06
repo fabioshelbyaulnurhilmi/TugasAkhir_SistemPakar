@@ -9,6 +9,7 @@ use App\Models\Penyakit;
 use Intervention\Image\Facades\Image;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 class dataPakarController extends Controller
@@ -67,17 +68,19 @@ class dataPakarController extends Controller
 
     public function tambahObat()
     {
-        $idObt = Obat::orderBy('id', 'desc')->first();
+        $idObt = Obat::orderBy('idObat', 'desc')->first();
         $Datapenyakit = Penyakit::all();
         return view('admin.dataPakar.tambahObat',[
         'idObt'=>$idObt,
-        'Datapenyakit'=>$Datapenyakit]);
+        'Datapenyakit'=>$Datapenyakit,
+        ]);
     }
 
 
     #------------------------------ BAGIAN GEJALA ---------------------------------
     public function simpanGejala(Request $request)
     {
+
 
         $this->validate($request, [
             'idGejala' => 'required',
@@ -107,6 +110,8 @@ class dataPakarController extends Controller
 
     public function updateGejala(Request $request)
     {
+        $dGejala = Gejala::where('idGejala',$request->idGejala)->first();
+
         $this->validate($request, [
             'idGejala' => 'required',
             'namaGejala' => 'required',
@@ -118,12 +123,23 @@ class dataPakarController extends Controller
 
         ]);
 
-$dGejala = Gejala::where('id',$request->id)->first();
+        if ($request->gambarGejala) {
+            if (Storage::exists('public/' . $dGejala->gambarGejala)) {
+                Storage::delete('public/' . $dGejala->gambarGejala);
+                // $this->alert('success', 'gambar Berhasil Diupdate');
+            };
+
+            $image_name = uniqid() . '.' . $request->gambarGejala->getClientOriginalExtension();
+            $image_path = 'imagesGejala/' . $image_name;
+            Image::make($request->gambarGejala->getRealPath())->fit(500, 500)->save(storage_path('app/public/' . $image_path));
+        }else{
+            $image_path = $dGejala->gambarGejala;
+        }
 
         $dGejala->update([
             'idGejala'=>$request->idGejala,
             'namaGejala'=>$request->namaGejala,
-            // 'gambarGejala'=>$request->gambarGejala,
+            'gambarGejala'=>$image_path,
         ]);
         Alert::success('Berhasil','Mengubah Data Gejala');
 
@@ -132,12 +148,18 @@ $dGejala = Gejala::where('id',$request->id)->first();
     }
     public function deleteGejala(Request $request,$id)
     {
-        Gejala::find($id)->delete();
+        $gejala = Gejala::where('idGejala', $id)->first();
+        Storage::delete('public/' . $gejala->gambarGejala);
+        if (!$gejala) {
+            Alert::success('GAGAL', 'Menghapus Data Admin');
+            return redirect()->route('data-admin')
+                ->with('error', 'User not found');
+        }
+        $gejala->delete();
 
-        Alert::success('Berhasil','Menghapus Data Gejala');
-
-        return redirect()->route('data-gejala')
-        ->with('success',' created successfully.');
+        Alert::success('Berhasil', 'Menghapus Data Admin');
+        return redirect()->route('data-admin')
+            ->with('success', 'Deleted successfully');
     }
 
     #------------------------ BAGIAN PENYAKIT ------------------------
@@ -182,6 +204,8 @@ $dGejala = Gejala::where('id',$request->id)->first();
 
     public function updatePenyakit(Request $request)
     {
+        $dPenyakit = Penyakit::where('idPenyakit',$request->idPenyakit)->first();
+
         $this->validate($request, [
             'idPenyakit' => 'required',
             'namaPenyakit' => 'required',
@@ -201,12 +225,25 @@ $dGejala = Gejala::where('id',$request->id)->first();
 
         ]);
 
-$dPenyakit = Penyakit::where('id',$request->id)->first();
+        if ($request->gambar) {
+
+            if (Storage::exists('public/' . $dPenyakit->gambar)) {
+                Storage::delete('public/' . $dPenyakit->gambar);
+                // $this->alert('success', 'gambar Berhasil Diupdate');
+            };
+
+            $image_name = uniqid() . '.' . $request->gambar->getClientOriginalExtension();
+            $image_path = 'imagesPenyakit/' . $image_name;
+            Image::make($request->gambar->getRealPath())->fit(500, 500)->save(storage_path('app/public/' . $image_path));
+
+        }else{
+            $image_path = $dPenyakit->gambar;
+        }
 
         $dPenyakit->update([
             'idPenyakit'=>$request->idPenyakit,
             'namaPenyakit'=>$request->namaPenyakit,
-            // 'gambar'=>$request->gambar,
+            'gambar'=>$image_path,
             'keterangan'=>$request->keterangan,
             'solusi'=>$request->solusi,
             'key'=> ' ',
@@ -218,12 +255,17 @@ $dPenyakit = Penyakit::where('id',$request->id)->first();
     }
     public function deletePenyakit(Request $request,$id)
     {
-        Penyakit::find($id)->delete();
-
-        Alert::success('Berhasil','Menghapus Data Penyakit');
-
-        return redirect()->route('data-penyakit')
-        ->with('success',' created successfully.');
+        $penyakit = Penyakit::where('idPenyakit', $id)->first();
+        Storage::delete('public/' . $penyakit->gambar);
+        if (!$penyakit) {
+            Alert::success('GAGAL', 'Menghapus Data Admin');
+            return redirect()->route('data-admin')
+                ->with('error', 'User not found');
+        }
+        $penyakit->delete();
+        Alert::success('Berhasil', 'Menghapus Data Admin');
+        return redirect()->route('data-admin')
+            ->with('success', 'Deleted successfully');
     }
 
     #------------------------------- BAGIAN OBAT--------------------------
@@ -277,6 +319,8 @@ $dPenyakit = Penyakit::where('id',$request->id)->first();
 
     public function updateObat(Request $request)
     {
+        $dObat = Obat::where('idObat',$request->idObat)->first();
+
         $this->validate($request, [
             'idObat' => 'required',
             'idPenyakit' => 'required',
@@ -303,13 +347,26 @@ $dPenyakit = Penyakit::where('id',$request->id)->first();
 
         ]);
 
-$dObat = Obat::where('id',$request->id)->first();
+        if ($request->gambarObat) {
+
+            if (Storage::exists('public/' . $dObat->gambarObat)) {
+                Storage::delete('public/' . $dObat->gambarObat);
+                // $this->alert('success', 'gambar Berhasil Diupdate');
+            };
+
+            $image_name = uniqid() . '.' . $request->gambarObat->getClientOriginalExtension();
+            $image_path = 'imagesObat/' . $image_name;
+            Image::make($request->gambarObat->getRealPath())->fit(500, 500)->save(storage_path('app/public/' . $image_path));
+
+        }else{
+            $image_path = $dObat->gambarObat;
+        }
 
         $dObat->update([
             'idObat'=>$request->idObat,
             'idPenyakit'=>$request->idPenyakit,
             'namaObat'=>$request->namaObat,
-            // 'gambarObat'=> $request->gambarObat,
+            'gambarObat'=> $image_path,
             'cara'=>$request->cara,
             'jenis'=>$request->jenis,
             'khasiat'=>$request->khasiat,
@@ -319,14 +376,20 @@ $dObat = Obat::where('id',$request->id)->first();
         return redirect()->route('data-obat')
         ->with('success',' created successfully.');
     }
-    public function deleteObat(Request $request,$id)
+    public function deleteObat(Request $request,$idObat)
     {
-        Obat::find($id)->delete();
-
-        Alert::success('Berhasil','Menghapus Data Obat');
-
-        return redirect()->route('data-obat')
-        ->with('success',' created successfully.');
+        $obat = Obat::where('idObat', $idObat)->first();
+        Storage::delete('public/' . $obat->gambarObat);
+        if (!$obat) {
+            Alert::success('GAGAL', 'Menghapus Data Admin');
+            return redirect()->route('data-admin')
+                ->with('error', 'User not found');
+        }
+        $obat->delete();
+        Alert::success('Berhasil', 'Menghapus Data Admin');
+        return redirect()->route('data-admin')
+            ->with('success', 'Deleted successfully');
+        // return @dd($obat);
     }
 
 }

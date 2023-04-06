@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-12 col-md-12 col-lg-12 col-xl-12">
             <a class="block block-rounded block-link-pop border-start border-primary border-4" href="/">
-                <div class="block-content block-content-full" style="background-color: rgba(37, 166, 202, 0.562)">
+                <div class="block-content block-content-full" style="background-color: #06d47b">
                     <div class="fs-sm fw-semibold text-uppercase text-muted">Hello, Admin</div>
                     <div class="fs-2 fw-bold text-dark">Selamat Datang Di Sistem Pakar Penyakit Tanaman Buah Dikotil</div>
                 </div>

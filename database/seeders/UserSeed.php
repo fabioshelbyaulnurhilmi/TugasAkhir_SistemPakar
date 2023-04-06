@@ -26,6 +26,17 @@ class UserSeed extends Seeder
             // 'gambar' => '123213'
         ]);
         User::create([
+            // 'idUser' => 'Petani-1',
+            // 'key' => 'Petani-1',
+            'namaPengguna' => 'Fabio user2',
+            'jenisKelamin' => 'Laki-laki',
+            'username' => 'fabio12',
+            'password' =>  bcrypt('password'),
+            'alamat' => 'kk',
+            'userRole' => 'user',
+            // 'gambar' => '123213'
+        ]);
+        User::create([
             'namaPengguna' => 'Fabio admin',
             'jenisKelamin' => 'Laki-laki',
             'username' => 'fabio2',

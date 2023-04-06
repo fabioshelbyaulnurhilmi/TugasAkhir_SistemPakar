@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
+use App\Models\DetailPenyakit;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

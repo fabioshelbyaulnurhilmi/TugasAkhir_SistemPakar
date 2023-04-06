@@ -13,8 +13,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('idUser')->nullable();
+            // $table->id();
+            $table->string('idUser')->primary();
             $table->string('namaPengguna', 55);
             $table->string('jenisKelamin')->nullable();
             $table->string('username', 25);

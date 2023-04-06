@@ -56,8 +56,6 @@ class dataAturanController extends Controller
 
             'idGejala.required' => 'Gejala tidak boleh kosong.',
 
-
-
         ]);
 
 

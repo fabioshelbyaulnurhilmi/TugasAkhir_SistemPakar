@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-12 col-md-12 col-lg-12 col-xl-12">
             <a class="block block-rounded block-link-pop border-start border-primary border-4" href="/">
-                <div class="block-content block-content-full" style="background-color: rgba(37, 166, 202, 0.562)">
+                <div class="block-content block-content-full" style="background-color: #06d47b">
                     {{-- <div class="fs-sm fw-semibold text-uppercase text-muted">Halo Petani,</div> --}}
                     <div class="fs-2 fw-bold text-dark">Halo, Selamat Datang Petani
                     </div>
@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-md-6 col-xl-12">
             <div class="block block-rounded">
-                <div class="block-header block-header-default" style="background-color: rgb(204, 232, 204)">
+                <div class="block-header block-header-default" style="background-color: #B3FFAE">
                     <h2 class="block-title text-center">
                         Selamat Datang di Sistem Pakar Penyakit
                         <br>Tanaman Buah Dikotil

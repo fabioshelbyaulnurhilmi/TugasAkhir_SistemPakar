@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "alfa6661/laravel-autonumber": "^1.2",
+        "barryvdh/laravel-dompdf": "^2.0",
         "cviebrock/eloquent-sluggable": "^9.0",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.7",
@@ -14,6 +15,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.2",
+        "livewire/livewire": "^2.12",
         "realrashid/sweet-alert": "^6.0"
     },
     "require-dev": {
