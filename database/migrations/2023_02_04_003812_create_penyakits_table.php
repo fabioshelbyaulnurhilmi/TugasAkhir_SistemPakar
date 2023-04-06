@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -14,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gejalas', function (Blueprint $table) {
-            // $table->id();
-            $table->string('idGejala')->primary();
-            $table->string('namaGejala', 255);
-            $table->string('gambarGejala')->nullable();
-            $table->string('key');
+        Schema::create('penyakits', function (Blueprint $table) {
+            $table->string('idPenyakit')->primary();
+            $table->string('namaPenyakit');
+            $table->text('keterangan');
+            $table->text('solusi');
+            $table->string('gambar')->nullable();
+            $table->string('key')->default(' ');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gejalas');
+        Schema::dropIfExists('penyakits');
     }
 };

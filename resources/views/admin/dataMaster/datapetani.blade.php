@@ -41,7 +41,7 @@
                             </td>
                             <td class="text-center">
                                 <img class="img-avatar img-avatar48"
-                                    src="{{ is_null($key->gambar) ? '/assets/media/avatars/avatar10.jpg' : (asset('storage/' . $key->gambar)) }}"
+                                    src="{{ is_null($key->gambar) ? '/assets/media/avatars/avatar10.jpg' : asset('storage/' . $key->gambar) }}"
                                     alt="">
                             </td>
                             <td class="text-center">
@@ -50,11 +50,11 @@
                                         class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled">
                                         <i class="fa fa-fw fa-pencil-alt"></i>
                                     </a>
-                                    <a href="{{ route('delete-data-petani', $key->key) }}" type="submit"
-                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip"
-                                        aria-label="Delete" data-bs-original-title="Delete">
+                                    <button data-id="{{ $key->idUser }}" onclick="deletePost(this)" type="button"
+                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled delete-user"
+                                        data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
                                         <i class="fa fa-fw fa-times"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -65,3 +65,45 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+
+    <script>
+        // import axios from 'axios'
+
+        function deletePost(button) {
+            const postId = button.getAttribute('data-id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`/dataMaster/datapetani/deletepetani/${postId}`)
+                        .then(() => {
+                            const post = button.closest('.post');
+                            post.remove();
+                            // Swal.fire({
+                            //     title: 'Success!',
+                            //     text: 'The post has been deleted.',
+                            //     icon: 'success',
+                            //     confirmButtonText: 'OK'
+                            // });
+                        })
+                        .catch(() => {
+                            location.reload()
+                            // Swal.fire({
+                            //     title: 'Error!',
+                            //     text: 'An error occurred while deleting the post.',
+                            //     icon: 'success',
+                            //     confirmButtonText: 'OK'
+                            // });
+                        });
+                }
+            });
+        }
+    </script>
+@endpush

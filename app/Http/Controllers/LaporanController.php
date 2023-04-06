@@ -41,7 +41,11 @@ class LaporanController extends Controller
 
  public function chat()
  {
-    $chat = DB::table('chats')->get();
+    $chat = Chat::where('is_admin','salah')->orderBy('created_at','DESC')->get();
+    // $chat = DB::table('chats')
+    // ->groupBy(['sender_id', 'idChat','isi','tanggal','receiver_id','is_admin','created_at','updated_at'])
+    //         ->orderBy('tanggal', 'desc')
+    //         ->get();
     return view('admin.dataLaporan.chat', ['chat' => $chat]);
  }
 

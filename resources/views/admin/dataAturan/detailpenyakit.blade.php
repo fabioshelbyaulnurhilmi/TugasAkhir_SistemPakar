@@ -16,7 +16,6 @@
                         <th class="text-center" style="width: 10%">Bagian Terserang</th>
                         <th class="text-center" style="width: 10%"> Nama Penyakit</th>
                         <th class="text-center" style="width: 70%"> Gejala Penyakit</th>
-                        <th class="text-center">Gambar</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -35,19 +34,17 @@
                             <td class="fw-normal fs-sm text-center " style="text-align: justify">
                                 {{ $key->DetailPenyakitToGejala->namaGejala }}</td>
                             <td class="text-center">
-                                <img class="img-avatar img-avatar48" src="assets/media/avatars/avatar1.jpg" alt="">
-                            </td>
-                            <td class="text-center">
                                 <div class="btn-group">
                                     <a href="{{ route('edit-detail-penyakit', $key->id) }}" type="button"
                                         class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip"
                                         aria-label="Edit" data-bs-original-title="Edit">
                                         <i class="fa fa-fw fa-pencil-alt"></i>
                                     </a>
-                                    <a href="{{ route('delete-detail-penyakit', $key->id) }}"
-                                        class="btn  btn-sm btn-alt-secondary js-bs-tooltip-enabled remove-user">
+                                    <button data-id="{{ $key->id }}" onclick="deletePost(this)" type="button"
+                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled delete-user"
+                                        data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
                                         <i class="fa fa-fw fa-times"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -57,3 +54,46 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // import axios from 'axios'
+
+        function deletePost(button) {
+            const postId = button.getAttribute('data-id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`/dataAturan/detailpenyakit/delete/${postId}`)
+                        .then(() => {
+                            const post = button.closest('.post');
+                            post.remove();
+                            // Swal.fire({
+                            //     title: 'Success!',
+                            //     text: 'The post has been deleted.',
+                            //     icon: 'success',
+                            //     confirmButtonText: 'OK'
+                            // });
+                        })
+                        .catch(() => {
+                            location.reload()
+                            // Swal.fire({
+                            //     title: 'Error!',
+                            //     text: 'An error occurred while deleting the post.',
+                            //     icon: 'success',
+                            //     confirmButtonText: 'OK'
+                            // });
+                        });
+                }
+            });
+        }
+    </script>
+@endpush

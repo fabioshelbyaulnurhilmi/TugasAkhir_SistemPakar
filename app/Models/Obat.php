@@ -10,19 +10,20 @@ class Obat extends Model
 {
     use HasFactory;
 
+    // use AutoNumberTrait;
 
-    use AutoNumberTrait;
-
-
-    public function getAutoNumberOptions()
+    protected static function boot()
     {
-        return [
-            'idObat' => [
-                'format' => 'S-?', // autonumber format. '?' will be replaced with the generated number.
-                'length' => 2 // The number of digits in an autonumber
-            ]
-        ];
+        parent::boot();
+        static::creating(function ($model) {
+            $count = static::count();
+            $model->idObat = 'S-' . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+        });
+
     }
+
+    protected $primaryKey = 'idObat';
+    // protected $primaryKey = 'idGejala';
     protected $fillable = [
         'idPenyakit',
         'idObat',
@@ -32,8 +33,12 @@ class Obat extends Model
         'jenis',
         'khasiat'
     ];
+
+    protected $casts = [
+        'idObat' => 'string',
+    ];
     public function obatToPenyakit()
     {
-        return $this->belongsTo(Penyakit::class, 'idPenyakit');
+        return $this->belongsTo(Penyakit::class, 'idPenyakit', 'idPenyakit');
     }
 }

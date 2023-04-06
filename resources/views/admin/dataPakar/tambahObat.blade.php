@@ -1,11 +1,12 @@
 @extends('layouts.main')
 @section('page')
+    {{-- {{ $idObt }} --}}
     @php
         if (!is_null($idObt)) {
-            if ((int) substr($idObt->id, -2, 2) < 9) {
-                $ido = 'S-0' . (int) substr($idObt->id, -2, 2) + 1;
+            if ((int) substr($idObt->idObat, -2, 2) < 9) {
+                $ido = 'S-0' . (int) substr($idObt->idObat, -2, 2) + 1;
             } else {
-                $ido = 'S-' . (int) substr($idObt->id, -2, 2) + 1;
+                $ido = 'S-' . (int) substr($idObt->idObat, -2, 2) + 1;
             }
         } else {
             $ido = 'S-01';
@@ -19,25 +20,30 @@
                     @csrf
                     <div class="row">
                         <div class="row">
-                            <div class="col-12">
-                                <label class="form-label" for="example-text-input">Id Obat</label>
-                                <input type="text" name="idObat" value="{{ $ido }}" class="form-control"
-                                    placeholder="">
+                            <div class="col-lg-8 col-xl-12">
+                                <div class="mb-4">
+                                    <label class="form-label" for="example-text-input">Id Obat</label>
+                                    <input type="text" name="idObat" value="{{ $ido }}" class="form-control"
+                                        placeholder="">
+                                </div>
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label" for="example-select"> Pilih Penyakit yang Sesuai untuk
-                                    Obat!</label>
-                                <select class="form-select @error('idPenyakit') is-invalid @enderror" id="example-select"
-                                    name="idPenyakit">
-                                    @foreach ($Datapenyakit as $s)
-                                        <option value="{{ $s->id }}"
-                                            {{ old('idPenyakit') == $s->id ? 'selected' : '' }}> {{ $s->namaPenyakit }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('idPenyakit')
-                                    <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
-                                @enderror
+                            <div class="col-lg-8 col-xl-12">
+                                <div class="mb-4">
+                                    <label class="form-label" for="example-select"> Pilih Penyakit yang Sesuai untuk
+                                        Obat!</label>
+                                    <select class="form-select @error('idPenyakit') is-invalid @enderror"
+                                        id="example-select" name="idPenyakit">
+                                        @foreach ($Datapenyakit as $s)
+                                            <option value="{{ $s->idPenyakit }}"
+                                                {{ old('idPenyakit') == $s->idPenyakit ? 'selected' : '' }}>
+                                                {{ $s->namaPenyakit }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('idPenyakit')
+                                        <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                             <div class="col-lg-8 col-xl-12">
                                 <div class="mb-4">
@@ -49,7 +55,8 @@
                                             <i class="fa fa-pump-medical"></i>
                                         </span>
                                         @error('namaObat')
-                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
+                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                 </div>
@@ -65,7 +72,8 @@
                                             <i class="fa fa-hand-holding-medical"></i>
                                         </span>
                                         @error('cara')
-                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
+                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                 </div>
@@ -80,7 +88,8 @@
                                             <i class="fa fa-bong"></i>
                                         </span>
                                         @error('jenis')
-                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
+                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                 </div>
@@ -95,16 +104,22 @@
                                             <i class="fa fa-bong"></i>
                                         </span>
                                         @error('khasiat')
-                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
+                                            <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-8 col-xl-12 overflow-hidden">
                                 <div class="mb-4">
-                                    <label class="form-label" for="example-file-input-multiple">Gambar Obat</label>
-                                    <input class="form-control" type="file" name="gambarObat"
-                                        id="example-file-input-multiple" multiple>
+                                    <label class="form-label" for="example-file-input-multiple">Pilih Foto</label>
+                                    <input class="form-control" type="file" name="gambarObat" multiple>
+                                    @error('gambarObat')
+                                        <span class="text-danger" style="font-size: 0.875rem;">
+
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\Hash;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Str;
 
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Symfony\Component\CssSelector\Parser\Shortcut\ElementParser;
 
 class dataAdminController extends Controller
 {
@@ -39,14 +41,14 @@ class dataAdminController extends Controller
     public function tambahAdmin()
     {
         $idadm = User::orderBy('idUser', 'desc')->first();
-        $idg  = 'Admin-'.CarbonImmutable::now()->timestamp;
+        $idg  = 'Admin-'.CarbonImmutable::now()->timestamp.str::random(3);
         return view('admin.dataMaster.tambahAdmin',['idg'=>strtolower($idg)]);
     }
 
     public function tambahPetani()
     {
         $idptn = User::orderBy('idUser', 'desc')->first();
-        $idp = 'Petani-' .CarbonImmutable::now()->timestamp;
+        $idp = 'Petani-' .CarbonImmutable::now()->timestamp.str::random(3);
         return view('admin.dataMaster.tambahPetani',['idp'=>strtolower($idp)]);
     }
 
@@ -97,9 +99,15 @@ class dataAdminController extends Controller
         $image_path = 'images/' . $image_name;
         Image::make($request->gambar->getRealPath())->fit(500, 500)->save(storage_path('app/public/'.$image_path));
 
+        if ($request->userRole == 'pemilik') {
+            $idUsr = 'pemilik-' . CarbonImmutable::now()->timestamp;
+        } else {
+            $idUsr = $request->idUser;
+        };
+
         User::create([
             'namaPengguna'=>$request->namaPengguna,
-            'idUser'=> $request->idUser,
+            'idUser'=> $idUsr,
             'username'=>$request->username,
             'gambar'=>$image_path,
             'jenisKelamin'=>'Laki-laki',
@@ -114,12 +122,15 @@ class dataAdminController extends Controller
 
     public function updateAdmin(Request $request)
     {
-    $dAdmin = User::where('id',$request->id)->first();
+    $dAdmin = User::where('idUser',$request->idUser)->first();
 
     if ($request->password) {
         $this->validate($request, [
             'namaPengguna' => 'required',
-            'username' => 'required|unique:users,username,'.$dAdmin->id,
+            'username' => [
+                'required',
+                Rule::unique('users')->ignore($request->idUser, 'idUser'),
+            ],
             // 'gambar' => 'required',
             'userRole' => 'required',
             'alamat' => 'required',
@@ -144,7 +155,10 @@ class dataAdminController extends Controller
     } else {
         $this->validate($request, [
             'namaPengguna' => 'required',
-            'username' => 'required|unique:users,username,'.$dAdmin->id,
+            'username' => [
+                'required',
+                Rule::unique('users')->ignore($request->idUser, 'idUser'),
+            ],
             // 'gambar' => 'required',
             'userRole' => 'required',
             'alamat' => 'required',
@@ -168,12 +182,24 @@ class dataAdminController extends Controller
         ]);
     }
 
+    if ($request->gambar) {
 
+        if (Storage::exists('public/' . $dAdmin->gambar)) {
+            Storage::delete('public/' . $dAdmin->gambar);
+            // $this->alert('success', 'gambar Berhasil Diupdate');
+        };
 
-$dAdmin->update([
+        $image_name = uniqid() . '.' . $request->gambar->getClientOriginalExtension();
+        $image_path = 'images/' . $image_name;
+        Image::make($request->gambar->getRealPath())->fit(500, 500)->save(storage_path('app/public/' . $image_path));
+    }else{
+        $image_path = $dAdmin->gambar;
+    }
+
+    $dAdmin->update([
             'namaPengguna'=>$request->namaPengguna,
             'username'=>$request->username,
-            // 'gambar'=>$request->gambar,
+            'gambar'=>$image_path,
             'userRole'=>$request->userRole,
             'alamat'=>$request->alamat,
             'password'=>Hash::make($request->password),
@@ -184,14 +210,19 @@ $dAdmin->update([
             ->with('success',' created successfully.');
 
 }
-            public function deleteAdmin(Request $request,$id)
+    public function deleteAdmin(Request $request,$id)
     {
-            User::find($id)->delete();
-
-            Alert::success('Berhasil','Menghapus Data Admin');
-
+        $user = User::where('idUser', $id)->first();
+        Storage::delete('public/' . $user->gambar);
+        if (!$user) {
+            Alert::success('GAGAL', 'Menghapus Data Admin');
             return redirect()->route('data-admin')
-            ->with('success',' created successfully.');
+                ->with('error', 'User not found');
+        }
+        $user->delete();
+        Alert::success('Berhasil', 'Menghapus Data Admin');
+        return redirect()->route('data-admin')
+            ->with('success', 'Deleted successfully');
 }
 
     # Bagian Petani
@@ -227,7 +258,6 @@ $dAdmin->update([
 
         ]);
 
-
         $image_name = uniqid() . '.' . $request->gambar->getClientOriginalExtension();
         $image_path = 'images/' . $image_name;
         Image::make($request->gambar->getRealPath())->fit(500, 500)->save(storage_path('app/public/'.$image_path));
@@ -248,12 +278,15 @@ $dAdmin->update([
 
     public function updatePetani(Request $request)
     {
-    $dPetani = User::where('id',$request->id)->first();
+    $dPetani = User::where('idUser',$request->idUser)->first();
 
     if ($request->password) {
         $this->validate($request, [
             'namaPengguna' => 'required',
-            'username' => 'required|unique:users,username,'.$dPetani->id,
+            'username' => [
+                'required',
+                Rule::unique('users')->ignore($request->idUser, 'idUser'),
+            ],
             // 'gambar' => 'required',
             'jenisKelamin' => 'required',
             'alamat' => 'required',
@@ -278,7 +311,10 @@ $dAdmin->update([
     } else {
         $this->validate($request, [
             'namaPengguna' => 'required',
-            'username' => 'required|unique:users,username,'.$dPetani->id,
+            'username' => [
+                'required',
+                Rule::unique('users')->ignore($request->idUser, 'idUser'),
+            ],
             // 'gambar' => 'required',
             'jenisKelamin' => 'required',
             'alamat' => 'required',
@@ -302,12 +338,25 @@ $dAdmin->update([
         ]);
     }
 
+    if ($request->gambar) {
+
+        if (Storage::exists('public/' . $dPetani->gambar)) {
+            Storage::delete('public/' . $dPetani->gambar);
+            // $this->alert('success', 'gambar Berhasil Diupdate');
+        };
+
+        $image_name = uniqid() . '.' . $request->gambar->getClientOriginalExtension();
+        $image_path = 'images/' . $image_name;
+        Image::make($request->gambar->getRealPath())->fit(500, 500)->save(storage_path('app/public/' . $image_path));
+    }else{
+        $image_path = $dPetani->gambar;
+    }
 
 
 $dPetani->update([
             'namaPengguna'=>$request->namaPengguna,
             'username'=>$request->username,
-            // 'gambar'=>$request->gambar,
+            'gambar'=> $image_path,
             'jenisKelamin'=>$request->jenisKelamin,
             'alamat'=>$request->alamat,
             'password'=>Hash::make($request->password),
@@ -320,12 +369,17 @@ $dPetani->update([
 }
             public function deletePetani(Request $request,$id)
     {
-            User::find($id)->delete();
-
-            Alert::success('Berhasil','Menghapus Data Petani');
-
+        $user = User::where('idUser', $id)->first();
+        Storage::delete('public/' . $user->gambar);
+        if (!$user) {
+            Alert::success('GAGAL', 'Menghapus Data Petani');
             return redirect()->route('data-petani')
-            ->with('success',' created successfully.');
+                ->with('error', 'User not found');
+        }
+        $user->delete();
+        Alert::success('Berhasil', 'Menghapus Data Petani');
+        return redirect()->route('data-petani')
+            ->with('success', 'Deleted successfully');
 }
 
 }

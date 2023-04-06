@@ -44,11 +44,11 @@
                                         aria-label="Edit" data-bs-original-title="Edit">
                                         <i class="fa fa-fw fa-pencil-alt"></i>
                                     </a>
-                                    <a href="{{ route('delete-data-obat', $key->id) }}" type="button"
-                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip"
-                                        aria-label="Delete" data-bs-original-title="Delete">
+                                    <button data-id="{{ $key->idObat }}" onclick="deletePost(this)" type="button"
+                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled delete-user"
+                                        data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
                                         <i class="fa fa-fw fa-times"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -58,3 +58,45 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+
+    <script>
+        // import axios from 'axios'
+
+        function deletePost(button) {
+            const postId = button.getAttribute('data-id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`/dataPakar/dataobat/deleteobat/${postId}`)
+                        .then(() => {
+                            const post = button.closest('.post');
+                            post.remove();
+                            // Swal.fire({
+                            //     title: 'Success!',
+                            //     text: 'The post has been deleted.',
+                            //     icon: 'success',
+                            //     confirmButtonText: 'OK'
+                            // });
+                        })
+                        .catch(() => {
+                            location.reload()
+                            // Swal.fire({
+                            //     title: 'Error!',
+                            //     text: 'An error occurred while deleting the post.',
+                            //     icon: 'success',
+                            //     confirmButtonText: 'OK'
+                            // });
+                        });
+                }
+            });
+        }
+    </script>
+@endpush

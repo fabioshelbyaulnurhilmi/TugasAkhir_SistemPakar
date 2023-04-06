@@ -27,11 +27,36 @@
     <link rel="stylesheet" href="/assets/js/plugins/datatables-buttons-bs5/css/buttons.bootstrap5.min.css">
     <link rel="stylesheet" href="/assets/js/plugins/datatables-responsive-bs5/css/responsive.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script> --}}
 
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <!-- <link rel="stylesheet" id="css-theme" href="/assets/css/themes/amethyst.min.css"> -->
     <!-- END Stylesheets -->
+    @livewireStyles
+
+    <style>
+        .example {
+            /* background-color: #eee; */
+            /* width: 200px; */
+            height: 500px;
+            /* border: 1px dotted black; */
+            overflow-y: scroll;
+            /* Add the ability to scroll */
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+    </style>
 </head>
 
 <body>
@@ -100,7 +125,7 @@
       -->
         <nav id="sidebar" aria-label="Main Navigation">
             <!-- Side Header -->
-            <div class="content-header" style="background-color: #11FFBD">
+            <div class="content-header" style="background-color: #06d47b">
                 <!-- Logo -->
                 <a class="fw-semibold text-dual" href="index.html">
                     <span class="smini-visible">
@@ -329,7 +354,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-main-item {{ request()->is('riwayatPetani/*') ? ' open' : '' }}">
+                            <li class="nav-main-item {{ request()->is('petani/*') ? ' open' : '' }}">
                                 <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                     aria-haspopup="true" aria-expanded="false" href="#">
                                     <i class="nav-main-link-icon fa fa-group-arrows-rotate"></i>
@@ -337,8 +362,8 @@
                                 </a>
                                 <ul class="nav-main-submenu">
                                     <li class="nav-main-item">
-                                        <a class="nav-main-link{{ request()->is('riwayatPetani/riwayatdiagnosa') || request()->is('riwayatPetani/riwayatdiagnosa/*') ? ' active' : '' }}"
-                                            href="/riwayatPetani/riwayatdiagnosa">
+                                        <a class="nav-main-link{{ request()->is('petani/riwayatDiagnosa') || request()->is('petani/riwayatDiagnosa/*') ? ' active' : '' }}"
+                                            href="/petani/riwayatDiagnosa">
                                             <span class="nav-main-link-name">Riwayat Diagnosa</span>
                                         </a>
                                     </li>
@@ -538,6 +563,14 @@
         </footer>
         <!-- END Footer -->
     </div>
+    <script>
+        // get the div element
+        var div = document.getElementById('messages-container');
+        // automatically scroll to the bottom of the div when its content changes
+        div.addEventListener('DOMSubtreeModified', function() {
+            div.scrollTop = div.scrollHeight;
+        });
+    </script>
     <!-- END Page Container -->
 
     <!--
@@ -593,6 +626,8 @@
     <!-- Page JS Plugins -->
     <script src="/assets/js/plugins/chart.js/chart.min.js"></script>
     <script src="/assets/js/lib/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.js"></script>
     @stack('chart')
     <!-- Page JS Code -->
     <script src="/assets/js/pages/be_pages_dashboard.min.js"></script>
@@ -620,6 +655,8 @@
     <script>
         One.helpersOnLoad(['jq-easy-pie-chart', 'jq-sparkline']);
     </script>
+    @livewireScripts
+
 </body>
 
 </html>

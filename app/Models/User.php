@@ -4,33 +4,48 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Alfa6661\AutoNumber\AutoNumberTrait;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Unique;
 
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    use Sluggable;
-
-
-
-    public function sluggable(): array
+    // use Sluggable;
+    protected $primaryKey = 'idUser';
+    protected static function boot()
     {
+        parent::boot();
 
-        return [
-            'key' => [
-                'source' => 'fullname'
-            ]
-        ];
+
+        static::creating(function ($model) {
+            $model->idUser = str_replace([' ', "'"], '-', strtolower(($model->userRole == 'user' ? 'petani' : ($model->userRole == 'admin' ? 'admin' : 'pemilik')) . '-' . CarbonImmutable::now()->timestamp . Str::random(3) ));
+        });
+        static::creating(function ($model) {
+            $model->key = str_replace([' ', "'"], '-', strtolower($model->idUser . ' ' . $model->namaPengguna));
+        });
     }
-    public function getFullnameAttribute(): string
-    {
-        return $this->userRole . ' ' . $this->namaPengguna;
-    }
+
+
+    // public function sluggable(): array
+    // {
+
+    //     return [
+    //         'key' => [
+    //             'source' => 'fullname'
+    //         ]
+    //     ];
+    // }
+    // public function getFullnameAttribute(): string
+    // {
+    //     return $this->userRole . ' ' . $this->namaPengguna;
+    // }
     /**
      * The attributes that are mass assignable.
      *
@@ -89,6 +104,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'id' => 'string',
+        'idUser' => 'string',
     ];
 }

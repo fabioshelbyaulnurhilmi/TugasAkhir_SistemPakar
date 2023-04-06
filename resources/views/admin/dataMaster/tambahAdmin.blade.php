@@ -6,7 +6,7 @@
                 <form action="{{ route('simpan-data-admin') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-                        <div class="col-12 col-md-3 col-lg-3 col-xl-12">
+                        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
                             <div class="mb-4">
                                 <div class="col-12">
                                     <label class="form-label" for="example-text-input">Id Admin</label>
@@ -16,7 +16,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-8 col-xl-6">
+                            <div class="col-lg-6 col-xl-6">
                                 <div class="mb-4">
                                     <label class="form-label" for="example-text-input">Nama</label>
                                     <div class="input-group">
@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-8 col-xl-6">
+                            <div class="col-lg-6 col-xl-6">
                                 <div class="mb-4">
                                     <label class="form-label" for="example-text-input">Nama Pengguna</label>
                                     <div class="input-group">
@@ -51,11 +51,15 @@
                             </div>
                         </div>
                         <div class="row push">
-                            <div class="col-lg-8 col-xl-12 overflow-hidden">
-                                <div class="mb-4">
-                                    <label class="form-label" for="example-file-input-multiple">Pilih Foto</label>
-                                    <input class="form-control" type="file" name="gambar" multiple>
-                                </div>
+                            <div class="mb-4">
+                                <label class="form-label" for="example-file-input-multiple">Pilih Foto</label>
+                                <input class="form-control" type="file" name="gambar" multiple>
+                                @error('gambar')
+                                    <span class="text-danger" style="font-size: 0.875rem;">
+
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                             <div class="mb-4">
                                 <label class="form-label" for="example-select"> Role </label>
@@ -71,7 +75,7 @@
                                     <div class="invalid-feedback animated fadeIn mt-1 mb-1">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-lg-8 col-xl-12">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="mb-4">
                                     <label class="form-label" for="example-text-input">Alamat</label>
                                     <div class="input-group">
@@ -86,7 +90,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-8 col-xl-12">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="mb-4">
                                     <label class="form-label" for="example-text-input">Kata Sandi</label>
                                     <div class="input-group">
@@ -104,7 +108,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-8 col-xl-12">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="mb-4">
                                     <label class="form-label" for="example-text-input">Ulang Kata Sandi</label>
                                     <div class="input-group">

@@ -3,9 +3,9 @@
     <div class="block block-rounded">
         <div class="block-header block-header-default">
             <div class="block-content block-content-full">
-                <form action="{{ route('update-data-penyakit') }}" method="POST">
+                <form action="{{ route('update-data-penyakit') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="id" value="{{ $editPenyakit->id }}">
+                    <input type="hidden" name="idPenyakit" value="{{ $editPenyakit->idPenyakit }}">
                     <div class="row">
                         <div class="col-12 col-md-3 col-lg-3 col-xl-12">
                             <div class="mb-4">
@@ -57,8 +57,8 @@
                         </div>
                         <div class="col-lg-8 col-xl-12 overflow-hidden">
                             <div class="mb-4">
-                                <label class="form-label" for="example-file-input-multiple">Gambar Penyakit</label>
-                                <input class="form-control" type="file" id="example-file-input-multiple" multiple>
+                                <label class="form-label" for="gambar">Gambar Penyakit</label>
+                                <input class="form-control" type="file" id="gambar" name="gambar" multiple>
                             </div>
                         </div>
                     </div>
